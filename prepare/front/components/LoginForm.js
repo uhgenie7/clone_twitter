@@ -1,6 +1,9 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import { Button, Form, Input } from "antd";
 import Link from "next/link";
+
+// 리랜더링 되어도 같은 객체가 유지된다!
+const style = useMemo(() => ({ marginTop: 10 }), []);
 
 const LoginForm = () => {
   const [id, setId] = useState("");
@@ -31,7 +34,7 @@ const LoginForm = () => {
           required
         />
       </div>
-      <div>
+      <div style={style}>
         <Button type="primary" htmlType="submit" loading={false}>
           로그인
         </Button>
