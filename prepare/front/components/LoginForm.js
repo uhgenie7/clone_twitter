@@ -2,22 +2,26 @@ import React, { useState, useCallback, useMemo } from "react";
 import { Button, Form, Input } from "antd";
 import Link from "next/link";
 
-// 리랜더링 되어도 같은 객체가 유지된다!
-const style = useMemo(() => ({ marginTop: 10 }), []);
-
-const LoginForm = () => {
+const LoginForm = ({ setIsLoggedIn }) => {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
-  const onChangeId = useCallback(() => {
+  const onChangeId = useCallback((e) => {
     setId(e.target.value);
   }, []);
 
-  const onChangePassword = useCallback(() => {
+  const onChangePassword = useCallback((e) => {
     setPassword(e.target.value);
   }, []);
 
+  const onSubmitForm = useCallback(() => {
+    console.log(id, password);
+    setIsLoggedIn(true);
+  }, [id, password]);
+
+  const style = useMemo(() => ({ marginTop: 10 }), []);
+
   return (
-    <Form>
+    <Form onFinish={onSubmitForm}>
       <div>
         <label htmlFor="user-id">아이디</label>
         <br />
