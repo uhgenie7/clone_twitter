@@ -12,6 +12,7 @@ import styled from "styled-components";
 import Link from "next/link";
 import { useSelector } from "react-redux";
 import PostImages from "./PostImages";
+import CommentForm from "./CommentForm";
 
 const PostCard = ({ post }) => {
   const [liked, setLiked] = useState(false);
@@ -68,9 +69,25 @@ const PostCard = ({ post }) => {
           description={post.content}
         />
       </Card>
-      {commentFormOpened && <div>댓글 부분</div>}
-      {/* <CommentForm />
-      <Comments /> */}
+      {commentFormOpened && (
+        <div>
+          <CommentForm post={post} />
+          <List
+            header={`${post.Comments.length} 댓글`}
+            itemLayout="horizontal"
+            dataSource={post.Comments}
+            renderItem={(item) => (
+              <li>
+                <Comment
+                  author={item.User.nickname}
+                  avatar={<Avatar>{item.User.nickname[0]}</Avatar>}
+                  content={item.content}
+                />
+              </li>
+            )}
+          />
+        </div>
+      )}
     </div>
   );
 };
