@@ -49,13 +49,17 @@ export const ADD_COMMENT_SUCCESS = "ADD_COMMENT_SUCCESS";
 export const ADD_COMMENT_FAILURE = "ADD_COMMENT_FAILURE";
 
 export const addPost = (data) => {
-  type: ADD_POST_REQUEST,
-  data,
+  return {
+    type: ADD_POST_REQUEST,
+    data,
+  };
 };
 
 export const addComment = (data) => {
-  type: ADD_COMMENT_REQUEST,
-  data,
+  return {
+    type: ADD_COMMENT_REQUEST,
+    data,
+  };
 };
 
 const dummyPost = {
@@ -76,7 +80,7 @@ export default (state = initialState, action) => {
         ...state,
         addPostLoading: true,
         addPostDone: false,
-        addPostError: null
+        addPostError: null,
       };
     case ADD_POST_SUCCESS:
       return {
@@ -91,25 +95,25 @@ export default (state = initialState, action) => {
         addPostLoading: false,
         addPostError: action.error,
       };
-      case ADD_COMMENT_REQUEST:
-        return {
-          ...state,
-          addCommentLoading: true,
-          addCommentDone: false,
-          addCommentError: null
-        };
-      case ADD_COMMENT_SUCCESS:
-        return {
-          ...state,
-          addCommentLoading: false,
-          addCommentDone: true,
-        };
-      case ADD_COMMENT_FAILURE:
-        return {
-          ...state,
-          addCommentLoading: false,
-          addCommentError: action.error,
-        };
+    case ADD_COMMENT_REQUEST:
+      return {
+        ...state,
+        addCommentLoading: true,
+        addCommentDone: false,
+        addCommentError: null,
+      };
+    case ADD_COMMENT_SUCCESS:
+      return {
+        ...state,
+        addCommentLoading: false,
+        addCommentDone: true,
+      };
+    case ADD_COMMENT_FAILURE:
+      return {
+        ...state,
+        addCommentLoading: false,
+        addCommentError: action.error,
+      };
     default:
       return state;
   }

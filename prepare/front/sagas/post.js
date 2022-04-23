@@ -16,7 +16,6 @@ import {
   ADD_COMMENT_FAILURE,
   ADD_COMMENT_REQUEST,
   ADD_COMMENT_SUCCESS,
-  addComment,
 } from "../reducers/post";
 
 function addPostAPI(data) {
