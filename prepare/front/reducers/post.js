@@ -38,6 +38,10 @@ export const initialState = {
   addPostLoading: false,
   addPostDone: false,
   addPostError: null,
+
+  addCommentLoading: false,
+  addCommentDone: false,
+  addCommentError: null,
 };
 
 export const ADD_POST_REQUEST = "ADD_POST_REQUEST";
@@ -48,32 +52,27 @@ export const ADD_COMMENT_REQUEST = "ADD_COMMENT_REQUEST";
 export const ADD_COMMENT_SUCCESS = "ADD_COMMENT_SUCCESS";
 export const ADD_COMMENT_FAILURE = "ADD_COMMENT_FAILURE";
 
-export const addPost = (data) => {
-  return {
-    type: ADD_POST_REQUEST,
-    data,
-  };
-};
+export const addPost = (data) => ({
+  type: ADD_POST_REQUEST,
+  data,
+});
 
-export const addComment = (data) => {
-  return {
-    type: ADD_COMMENT_REQUEST,
-    data,
-  };
-};
+export const addComment = (data) => ({
+  type: ADD_COMMENT_REQUEST,
+  data,
+});
 
-const dummyPost = {
+const dummyPost = (data) => ({
   id: 2,
-  content: "추가되는 게시물. 앞에다 두어야 새로운 게시물이 맨 위에 쌓이겠지요?",
+  content: data,
   User: {
     id: 1,
     nickname: "지니",
   },
   Images: [],
   Comments: [],
-};
-
-export default (state = initialState, action) => {
+});
+const reducer = (state = initialState, action) => {
   switch (action.type) {
     case ADD_POST_REQUEST:
       return {
@@ -85,7 +84,7 @@ export default (state = initialState, action) => {
     case ADD_POST_SUCCESS:
       return {
         ...state,
-        mainPosts: [dummyPost, ...state.mainPosts],
+        mainPosts: [dummyPost(action.data), ...state.mainPosts],
         addPostLoading: false,
         addPostDone: true,
       };
@@ -95,6 +94,7 @@ export default (state = initialState, action) => {
         addPostLoading: false,
         addPostError: action.error,
       };
+    //
     case ADD_COMMENT_REQUEST:
       return {
         ...state,
@@ -118,3 +118,5 @@ export default (state = initialState, action) => {
       return state;
   }
 };
+
+export default reducer;
