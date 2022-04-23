@@ -8,7 +8,6 @@ import {
   throttle,
   delay,
 } from "redux-saga/effects";
-import { all } from "redux-saga/effects";
 import axios from "axios";
 
 function addPostAPI(data) {

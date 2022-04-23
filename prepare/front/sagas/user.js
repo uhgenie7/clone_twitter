@@ -8,7 +8,6 @@ import {
   throttle,
   delay,
 } from "redux-saga/effects";
-import { all } from "redux-saga/effects";
 import axios from "axios";
 
 // 여기서의 매개변수 data는 call의 두 번째 매개변수의 data
@@ -26,7 +25,8 @@ function* logIn(action) {
     yield delay(1000);
     yield put({
       type: "LOG_IN_SUCCESS",
-      data: result.data,
+      //   data: result.data,
+      data: action.data,
     });
   } catch (err) {
     yield put({
@@ -42,7 +42,6 @@ function* logOut() {
     yield delay(1000);
     yield put({
       type: "LOG_OUT_SUCCESS",
-      data: result.data,
     });
   } catch (err) {
     yield put({

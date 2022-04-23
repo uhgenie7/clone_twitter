@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import { Avatar, Card, Button } from "antd";
-import { useDispatch } from "react-redux";
-import { logoutAction } from "../reducers/user";
+import { useDispatch, useSelector } from "react-redux";
+import { logoutRequestAction } from "../reducers/user";
 
 const dummy = {
   nickname: "지니",
@@ -13,8 +13,9 @@ const dummy = {
 
 const UserProfile = () => {
   const dispatch = useDispatch();
+  const { me, isLoggingOut } = useSelector((state) => state.user);
   const onLogOut = useCallback(() => {
-    dispatch(logoutAction());
+    dispatch(logoutRequestAction());
   }, []);
 
   return (
@@ -38,10 +39,12 @@ const UserProfile = () => {
       ]}
     >
       <Card.Meta
-        avatar={<Avatar>{dummy.nickname[0]}</Avatar>}
-        title={dummy.nickname}
+        avatar={<Avatar>{me.nickname[0]}</Avatar>}
+        title={me.nickname}
       />
-      <Button onClick={onLogOut}>로그아웃</Button>
+      <Button onClick={onLogOut} loading={isLoggingOut}>
+        로그아웃
+      </Button>
     </Card>
   );
 };
