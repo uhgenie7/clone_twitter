@@ -65,9 +65,9 @@ const dummyUser = (data) => ({
   ...data,
   nickname: "지니",
   id: 1,
-  Posts: [],
-  Followings: [],
-  Followers: [],
+  Posts: [{ id: 1 }],
+  Followings: [{ nickname: "오" }, { nickname: "박" }, { nickname: "사" }],
+  Followers: [{ nickname: "오" }, { nickname: "박" }, { nickname: "사" }],
 });
 
 const reducer = (state = initialState, action) => {
