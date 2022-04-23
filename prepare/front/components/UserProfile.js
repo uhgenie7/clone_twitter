@@ -4,14 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { logoutRequestAction } from "../reducers/user";
 import useInput from "../hooks/useInput";
 
-const dummy = {
-  nickname: "지니",
-  Posts: [],
-  Followings: [],
-  Followers: [],
-  isLoggedIn: false,
-};
-
 const UserProfile = () => {
   const dispatch = useDispatch();
   const { me, logOutLoading } = useSelector((state) => state.user);
