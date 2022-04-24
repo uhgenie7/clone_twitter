@@ -1,6 +1,14 @@
 import produce from "immer";
 
 export const initialState = {
+  followLoading: false,
+  followDone: false,
+  followError: null,
+
+  unfollowLoading: false,
+  unfollowDone: false,
+  unfollowError: null,
+
   isLoggingIn: false, //로그인 시도중
   isLoggingOut: false, //로그아웃 시도중
   isLoggedIn: false,
