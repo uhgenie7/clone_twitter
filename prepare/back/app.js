@@ -9,7 +9,16 @@ app.get("/", (req, res) => {
 });
 
 app.get("/api", (req, res) => {
+  // 문자열 응답
   res.send("hello api");
+});
+
+app.get("/api/post", (req, res) => {
+  res.json([
+    { id: 1, content: "hello" },
+    { id: 2, content: "hello2" },
+    { id: 3, content: "hello3" },
+  ]);
 });
 
 app.listen(3065, () => {
