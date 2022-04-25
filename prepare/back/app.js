@@ -21,6 +21,14 @@ app.get("/api/post", (req, res) => {
   ]);
 });
 
+app.post("/api/post", (req, res) => {
+  res.json([{ id: 1, content: "hello" }]);
+});
+
+app.delete("/api/post", (req, res) => {
+  res.json([{ id: 1 }]);
+});
+
 app.listen(3065, () => {
   console.log("서버 실행 중");
 });
