@@ -1,6 +1,9 @@
 const http = require("http");
-http.createServer((req, res) => {
+const server = http.createServer((req, res) => {
   console.log(res.url, req.method);
   res.end("hello node");
 });
-http.listion(3065);
+
+server.listen(3065, () => {
+  console.log("서버 실행 중");
+});
