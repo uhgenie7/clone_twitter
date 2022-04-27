@@ -1,6 +1,7 @@
 const express = require("express");
 
 const app = express();
+const postRouter = require("./routes/post");
 
 // app.method('url', (req, res)=>{callback})
 app.get("/", (req, res) => {
@@ -21,13 +22,8 @@ app.get("/api/post", (req, res) => {
   ]);
 });
 
-app.post("/api/post", (req, res) => {
-  res.json([{ id: 1, content: "hello" }]);
-});
-
-app.delete("/api/post", (req, res) => {
-  res.json([{ id: 1 }]);
-});
+// pre fix 됨
+app.use("/post", postRouter);
 
 app.listen(3065, () => {
   console.log("서버 실행 중");
