@@ -2,7 +2,10 @@ module.exports = (sequelize, DataTypes) => {
   const Post = sequelize.define(
     "Post",
     {
-      content: {},
+      content: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+      },
     },
     {
       charset: "utf8mb4",
