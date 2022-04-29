@@ -11,6 +11,9 @@ db.sequelize
   })
   .catch(console.error);
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 // app.method('url', (req, res)=>{callback})
 app.get("/", (req, res) => {
   // end (x) send (o)
