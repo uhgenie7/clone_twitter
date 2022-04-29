@@ -37,7 +37,7 @@ function logOutAPI() {
 }
 
 function signUpAPI() {
-  return axios.post("/api/signUp");
+  return axios.post("http://localhost:3065/user");
 }
 
 function* logIn(action) {
@@ -74,7 +74,8 @@ function* logOut() {
 
 function* signUp() {
   try {
-    // const result = yield call(signUpAPI);
+    const result = yield call(signUpAPI);
+    console.log(result);
     yield delay(1000);
     yield put({
       type: SIGN_UP_SUCCESS,
