@@ -33,7 +33,7 @@ function logInAPI(data) {
 }
 
 function logOutAPI() {
-  return axios.post("/logout");
+  return axios.post("/user/logout");
 }
 
 function signUpAPI(data) {
@@ -59,8 +59,8 @@ function* logIn(action) {
 
 function* logOut() {
   try {
-    // const result = yield call(logOutAPI);
-    yield delay(1000);
+    yield call(logOutAPI);
+    // yield delay(1000);
     yield put({
       type: LOG_OUT_SUCCESS,
     });

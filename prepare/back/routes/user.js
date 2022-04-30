@@ -78,7 +78,7 @@ router.post("/", async (req, res, next) => {
   }
 });
 
-router.post("/user/logout", (req, res) => {
+router.post("/logout", (req, res) => {
   req.logout();
   req.session.destroy();
   res.send("ok");
