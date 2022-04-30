@@ -40,7 +40,7 @@ app.use(
   })
 );
 app.use(passport.initialize());
-app.use(passport.seesion());
+app.use(passport.session());
 
 // app.method('url', (req, res)=>{callback})
 app.get("/", (req, res) => {
