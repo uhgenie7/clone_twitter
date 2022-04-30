@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
-const { User } = require("../models");
+const { User, Post } = require("../models");
 const passport = require("passport");
 
 router.post("/login", (req, res, next) => {
@@ -24,7 +24,28 @@ router.post("/login", (req, res, next) => {
         return next(loginErr);
       }
       // res.setHeader('Cookie, '랜덤문자')
-      return res.json(user);
+
+      const fullUserWithoutPassword = await User.findOne({
+        where: { id: user.id },
+        attributes: {
+          exclude: ["password"],
+        },
+        include: [
+          {
+            model: Post,
+          },
+          {
+            model: User,
+            as: "Followings",
+          },
+          {
+            model: User,
+            as: "Followers",
+          },
+        ],
+      });
+
+      return res.json(fullUserWithoutPassword);
     });
   })(req, res, next);
 });
