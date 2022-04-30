@@ -65,6 +65,10 @@ app.get("/api/post", (req, res) => {
 app.use("/post", postRouter);
 app.use("/user", userRouter);
 
+// app.user((err, req, res, next) => {
+//   // 직접 에러 처리 미들 웨어를 처리
+// });
+
 app.listen(3065, () => {
   console.log("서버 실행 중");
 });
