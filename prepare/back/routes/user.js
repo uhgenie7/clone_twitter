@@ -2,10 +2,20 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
 const { User } = require("../models");
+const passport = require("passport");
 
-router.post("/login", (req, res, next) => {
-  //user/login
-});
+router.post(
+  "/login",
+  passport.authenticate("lcoal", (err, user, info) => {
+    //done
+    if (err) {
+      // 서버 쪽 에러
+      console.error(err);
+      // 형식의 차이 때문에 expres가 에러 처리할 수 있게 하는 next 쓸 자리가 없다.
+      next(err);
+    }
+  })
+);
 
 router.post("/", async (req, res, next) => {
   try {
