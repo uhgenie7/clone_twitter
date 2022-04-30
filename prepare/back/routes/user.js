@@ -4,8 +4,7 @@ const bcrypt = require("bcrypt");
 const { User } = require("../models");
 const passport = require("passport");
 
-router.post(
-  "/login",
+router.post("/login", (req, res, next) => {
   passport.authenticate("lcoal", (err, user, info) => {
     //done
     if (err) {
@@ -14,8 +13,8 @@ router.post(
       // 형식의 차이 때문에 expres가 에러 처리할 수 있게 하는 next 쓸 자리가 없다.
       next(err);
     }
-  })
-);
+  })(req, res, next);
+});
 
 router.post("/", async (req, res, next) => {
   try {
