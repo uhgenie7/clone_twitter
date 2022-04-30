@@ -23,7 +23,7 @@ router.post("/login", (req, res, next) => {
         console.error(loginErr);
         return next(loginErr);
       }
-
+      // res.setHeader('Cookie, '랜덤문자')
       return res.json(user);
     });
   })(req, res, next);

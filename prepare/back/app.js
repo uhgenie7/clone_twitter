@@ -1,5 +1,8 @@
 const express = require("express");
 const cors = require("cors");
+const session = require("express-session");
+const cookieParser = require("cookie-parser");
+
 const postRouter = require("./routes/post");
 const userRouter = require("./routes/user");
 const db = require("./models");
@@ -23,6 +26,12 @@ app.use(
 );
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// session, cookie
+app.use(cookieParser());
+app.use(session());
+app.use(passport.initialize());
+app.use(passport.seesion());
 
 // app.method('url', (req, res)=>{callback})
 app.get("/", (req, res) => {
