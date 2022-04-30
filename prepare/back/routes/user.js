@@ -5,7 +5,7 @@ const { User } = require("../models");
 const passport = require("passport");
 
 router.post("/login", (req, res, next) => {
-  passport.authenticate("lcoal", (err, user, info) => {
+  passport.authenticate("local", (err, user, info) => {
     if (err) {
       // 서버에러
       console.error(err);

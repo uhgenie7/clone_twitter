@@ -23,7 +23,7 @@ module.exports = () => {
           const result = await bcrypt.compare(password, user.password); //클라이언트에서 온 패스워드, DB패스워드 비교
 
           if (result) {
-            return res.status(200).done(null, user);
+            return done(null, user);
           }
 
           return done(null, false, { reason: "비밀번호가 틀렸습니다." });
