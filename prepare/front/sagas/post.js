@@ -96,17 +96,17 @@ function* removePost(action) {
 }
 
 function addCommentAPI(data) {
-  return axios.post("/api/post/${data.postId}/comment", data);
+  return axios.post(`/post/${data.postId}/comment`, data); //post/1/comment
 }
 
 function* addComment(action) {
   try {
-    // const result = yield call(addCommentAPI, action.data);
-    yield delay(1000);
+    const result = yield call(addCommentAPI, action.data);
+    // yield delay(1000);
     yield put({
       type: ADD_COMMENT_SUCCESS,
-      // data: result.data,
-      data: action.data,
+      data: result.data,
+      // data: action.data,
     });
   } catch (err) {
     yield put({
