@@ -26,7 +26,7 @@ import { ADD_POST_TO_ME, REMOVE_POST_OF_ME } from "../reducers/user";
 import shortid from "shortid";
 
 function loadPostsAPI(data) {
-  return axios.get("/api/posts", data);
+  return axios.get("/api/posts", { content: data });
 }
 
 function* loadPosts(action) {
@@ -47,25 +47,21 @@ function* loadPosts(action) {
 }
 
 function addPostAPI(data) {
-  return axios.post("/api/post", data);
+  return axios.post("/post", data);
 }
 
 function* addPost(action) {
   try {
-    // const result = yield call(addPostAPI, action.data);
-    yield delay(1000);
-    const id = shortid.generate();
+    const result = yield call(addPostAPI, action.data);
+    // yield delay(1000);
+    // const id = shortid.generate();
     yield put({
       type: ADD_POST_SUCCESS,
-      // data: result.data,
-      data: {
-        id,
-        content: action.data,
-      },
+      data: result.data,
     });
     yield put({
       type: ADD_POST_TO_ME,
-      data: id,
+      data: result.data.id,
     });
   } catch (err) {
     yield put({
