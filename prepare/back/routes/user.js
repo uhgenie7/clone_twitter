@@ -6,13 +6,26 @@ const passport = require("passport");
 
 router.post("/login", (req, res, next) => {
   passport.authenticate("lcoal", (err, user, info) => {
-    //done
     if (err) {
-      // 서버 쪽 에러
+      // 서버에러
       console.error(err);
-      // 형식의 차이 때문에 expres가 에러 처리할 수 있게 하는 next 쓸 자리가 없다.
-      next(err);
+      return next(err);
     }
+
+    if (info) {
+      //클라이언트 에러
+      return res.status(401).send(info.reason);
+    }
+
+    return req.login(user, async (loginErr) => {
+      if (loginErr) {
+        //passport error
+        console.error(loginErr);
+        return next(loginErr);
+      }
+
+      return res.json(user);
+    });
   })(req, res, next);
 });
 
