@@ -22,6 +22,12 @@ router.post("/", isLoggedIn, async (req, res, next) => {
         },
         {
           model: Comment,
+          include: [
+            {
+              model: User, // 댓글 작성자
+              attributes: ["id", "nickname"],
+            },
+          ],
         },
         {
           model: User,

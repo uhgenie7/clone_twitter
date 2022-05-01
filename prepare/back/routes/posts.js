@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { Post, User, Image } = require("../models");
+const { Post, User, Image, Comment } = require("../models");
 
 router.get("/", async (req, res, next) => {
   //get /posts 여러개 가져옴
@@ -14,6 +14,9 @@ router.get("/", async (req, res, next) => {
         },
         {
           model: Image,
+        },
+        {
+          model: Comment,
         },
       ],
     });
