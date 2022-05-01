@@ -1,9 +1,11 @@
 const express = require("express");
-const router = express.Router();
 const bcrypt = require("bcrypt");
-const { User, Post } = require("../models");
 const passport = require("passport");
+
+const { User, Post } = require("../models");
 const { isLoggedIn, isNotLoggedIn } = require("./middlewares");
+
+const router = express.Router();
 
 router.get("/", async (req, res, next) => {
   // GET /user
@@ -44,24 +46,17 @@ router.get("/", async (req, res, next) => {
 router.post("/login", isNotLoggedIn, (req, res, next) => {
   passport.authenticate("local", (err, user, info) => {
     if (err) {
-      // 서버에러
       console.error(err);
       return next(err);
     }
-
     if (info) {
-      //클라이언트 에러
       return res.status(401).send(info.reason);
     }
-
     return req.login(user, async (loginErr) => {
       if (loginErr) {
-        //passport error
         console.error(loginErr);
         return next(loginErr);
       }
-      // res.setHeader('Cookie, '랜덤문자')
-
       const fullUserWithoutPassword = await User.findOne({
         where: { id: user.id },
         attributes: {
@@ -84,28 +79,23 @@ router.post("/login", isNotLoggedIn, (req, res, next) => {
           },
         ],
       });
-
-      return res.json(fullUserWithoutPassword);
+      return res.status(200).json(fullUserWithoutPassword);
     });
   })(req, res, next);
 });
 
 router.post("/", isNotLoggedIn, async (req, res, next) => {
+  // POST /user/
   try {
     const exUser = await User.findOne({
-      // 조건은 where
       where: {
         email: req.body.email,
       },
     });
-
     if (exUser) {
-      // return을 안 붙이면 send 응답을 두 번 보내게 되는 셈
-      return res.status(403).send("이미 사용 중인 아이디입니다");
+      return res.status(403).send("이미 사용 중인 아이디입니다.");
     }
-
-    const hashedPassword = await bcrypt.hash(req.body.password, 11);
-    // POST /user
+    const hashedPassword = await bcrypt.hash(req.body.password, 12);
     await User.create({
       email: req.body.email,
       nickname: req.body.nickname,
@@ -142,16 +132,13 @@ router.patch("/nickname", isLoggedIn, async (req, res, next) => {
 });
 
 router.patch("/:userId/follow", isLoggedIn, async (req, res, next) => {
-  //Patch user/1/follow
+  // PATCH /user/1/follow
   try {
     const user = await User.findOne({ where: { id: req.params.userId } });
-
     if (!user) {
-      res.status(403).send("없는 사람을 팔로우하려고 하시네요");
+      res.status(403).send("없는 사람을 팔로우하려고 하시네요?");
     }
-
     await user.addFollowers(req.user.id);
-
     res.status(200).json({ UserId: parseInt(req.params.userId, 10) });
   } catch (error) {
     console.error(error);
@@ -160,17 +147,59 @@ router.patch("/:userId/follow", isLoggedIn, async (req, res, next) => {
 });
 
 router.delete("/:userId/follow", isLoggedIn, async (req, res, next) => {
-  //Patch user/1/follow
+  // DELETE /user/1/follow
   try {
     const user = await User.findOne({ where: { id: req.params.userId } });
-
     if (!user) {
-      res.status(403).send("없는 사람을 언팔로우하려고 하시네요");
+      res.status(403).send("없는 사람을 언팔로우하려고 하시네요?");
     }
-
     await user.removeFollowers(req.user.id);
-
     res.status(200).json({ UserId: parseInt(req.params.userId, 10) });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+router.delete("/follower/:userId", isLoggedIn, async (req, res, next) => {
+  // DELETE /user/follower/2
+  try {
+    const user = await User.findOne({ where: { id: req.params.userId } });
+    if (!user) {
+      res.status(403).send("없는 사람을 차단하려고 하시네요?");
+    }
+    await user.removeFollowings(req.user.id);
+    res.status(200).json({ UserId: parseInt(req.params.userId, 10) });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+router.get("/followers", isLoggedIn, async (req, res, next) => {
+  // GET /user/followers
+  try {
+    const user = await User.findOne({ where: { id: req.user.id } });
+    if (!user) {
+      res.status(403).send("없는 사람을 찾으려고 하시네요?");
+    }
+    const followers = await user.getFollowers();
+    res.status(200).json(followers);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+router.get("/followings", isLoggedIn, async (req, res, next) => {
+  // GET /user/followings
+  try {
+    const user = await User.findOne({ where: { id: req.user.id } });
+    if (!user) {
+      res.status(403).send("없는 사람을 찾으려고 하시네요?");
+    }
+    const followings = await user.getFollowings();
+    res.status(200).json(followings);
   } catch (error) {
     console.error(error);
     next(error);
