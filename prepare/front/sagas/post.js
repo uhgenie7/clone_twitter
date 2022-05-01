@@ -17,13 +17,11 @@ import {
   REMOVE_POST_FAILURE,
   REMOVE_POST_SUCCESS,
   REMOVE_POST_REQUEST,
-  generateDummyPost,
   LOAD_POSTS_FAILURE,
   LOAD_POSTS_REQUEST,
   LOAD_POSTS_SUCCESS,
 } from "../reducers/post";
 import { ADD_POST_TO_ME, REMOVE_POST_OF_ME } from "../reducers/user";
-import shortid from "shortid";
 
 function loadPostsAPI(data) {
   return axios.get("/api/posts", data);

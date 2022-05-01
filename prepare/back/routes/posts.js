@@ -7,8 +7,12 @@ router.get("/", async (req, res, next) => {
   try {
     const posts = await Post.findAll({
       limit: 10,
-      offset: 10, //11~20
       order: [["createdAt", "DESC"]],
+      include: [
+        {
+          model: User,
+        },
+      ],
     });
     res.status(200).json(posts);
   } catch (err) {
