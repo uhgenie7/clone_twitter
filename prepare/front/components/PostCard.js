@@ -18,6 +18,7 @@ import {
   REMOVE_POST_REQUEST,
   LIKE_POST_REQUEST,
   UNLIKE_POST_REQUEST,
+  RETWEET_REQUEST,
 } from "../reducers/post";
 import FollowButton from "./FollowButton";
 
@@ -30,25 +31,48 @@ const PostCard = ({ post }) => {
   const { removePostLoading } = useSelector((state) => state.post);
 
   const onLike = useCallback(() => {
-    dispatch({
+    if (!id) {
+      return alert("로그인이 필요합니다.");
+    }
+
+    return dispatch({
       type: LIKE_POST_REQUEST,
       data: post.id,
     });
   }, []);
 
   const onUnLike = useCallback(() => {
-    dispatch({
+    if (!id) {
+      return alert("로그인이 필요합니다.");
+    }
+
+    return dispatch({
       type: UNLIKE_POST_REQUEST,
       data: post.id,
     });
   }, []);
+
+  const onRetweet = useCallback(() => {
+    if (!id) {
+      return alert("로그인이 필요합니다.");
+    }
+
+    return dispatch({
+      type: RETWEET_REQUEST,
+      data: post.id,
+    });
+  }, [id]);
 
   const onToggleComment = useCallback(() => {
     setCommentFormOpened((prev) => !prev);
   }, []);
 
   const onRemovePost = useCallback(() => {
-    dispatch({
+    if (!id) {
+      return alert("로그인이 필요합니다.");
+    }
+
+    return dispatch({
       type: REMOVE_POST_REQUEST,
       data: post.id,
     });
@@ -59,7 +83,7 @@ const PostCard = ({ post }) => {
       <Card
         cover={post.Images[0] && <PostImages images={post.Images} />}
         actions={[
-          <RetweetOutlined key="retweet" />,
+          <RetweetOutlined key="retweet" onClick={onRetweet} />,
           liked ? (
             <HeartTwoTone
               twoToneColor="#eb2f96"
