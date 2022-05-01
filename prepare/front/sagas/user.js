@@ -28,6 +28,9 @@ import {
   LOAD_MY_INFO_REQUEST,
   LOAD_MY_INFO_SUCCESS,
   LOAD_MY_INFO_FAILURE,
+  CHANGE_NICKNAME_FAILURE,
+  CHANGE_NICKNAME_REQUEST,
+  CHANGE_NICKNAME_SUCCESS,
 } from "../reducers/user";
 
 // 여기서의 매개변수 data는 call의 두 번째 매개변수의 data
@@ -153,6 +156,26 @@ function* loadMyInfo(action) {
   }
 }
 
+function changeNicknameAPI(data) {
+  return axios.patch("/user/nickname", { nickname: data });
+}
+
+function* changeNickname(action) {
+  try {
+    const result = yield call(changeNicknameAPI, action.data);
+    yield put({
+      type: CHANGE_NICKNAME_SUCCESS,
+      data: result.data,
+    });
+  } catch (err) {
+    console.error(err);
+    yield put({
+      type: CHANGE_NICKNAME_FAILURE,
+      error: err.response.data,
+    });
+  }
+}
+
 function* watchFollow() {
   yield takeLatest(FOLLOW_REQUEST, follow);
 }
@@ -177,6 +200,10 @@ function* watchLoadMyInfo() {
   yield takeLatest(LOAD_MY_INFO_REQUEST, loadMyInfo);
 }
 
+function* watchChangeNickname() {
+  yield takeLatest(CHANGE_NICKNAME_REQUEST, changeNickname);
+}
+
 export default function* userSaga() {
   yield all([
     fork(watchFollow),
@@ -185,5 +212,6 @@ export default function* userSaga() {
     fork(watchLogout),
     fork(watchSignUp),
     fork(watchLoadMyInfo),
+    fork(watchChangeNickname),
   ]);
 }

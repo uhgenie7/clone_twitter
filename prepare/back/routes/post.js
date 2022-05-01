@@ -110,7 +110,7 @@ router.delete("/:postId/like", isLoggedIn, async (req, res, next) => {
   }
 });
 
-router.delete("/:postId", (req, res, next) => {
+router.delete("/:postId", isLoggedIn, async (req, res, next) => {
   try {
     await Post.destroy({
       where: {
