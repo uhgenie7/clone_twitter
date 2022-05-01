@@ -5,6 +5,7 @@ const cookieParser = require("cookie-parser");
 const passport = require("passport");
 const dotenv = require("dotenv");
 const postRouter = require("./routes/post");
+const postsRouter = require("./routes/posts");
 const userRouter = require("./routes/user");
 const db = require("./models");
 const app = express();
@@ -64,6 +65,7 @@ app.get("/api/post", (req, res) => {
 
 // pre fix 됨
 app.use("/post", postRouter);
+app.use("/posts", postsRouter);
 app.use("/user", userRouter);
 
 // app.user((err, req, res, next) => {
