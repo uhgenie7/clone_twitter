@@ -14,7 +14,23 @@ try {
   fs.mkdirSync("uploads");
 }
 
-router.post("/", isLoggedIn, async (req, res, next) => {
+const upload = multer({
+  // 어디에 저장할 것이니?
+  storage: multer.diskStorage({
+    destination(req, file, done) {
+      done(null, "uploads");
+    },
+    filename(req, file, done) {
+      // dfd.png
+      const ext = path.extname(file.originalname); // 확장자 추출(.png)
+      const basename = path.basename(file.originalname, ext); // dfd
+      done(null, basename + "_" + new Date().getTime() + ext); // dfd1213.png
+    },
+  }),
+  limits: { fieldSize: 20 * 1024 * 1024 }, // 20MB 이미지 제한
+});
+
+router.post("/", isLoggedIn, upload.none(), async (req, res, next) => {
   // POST /post
   // res.json([{ id: 1, content: "hello" }]);
   try {
@@ -23,6 +39,23 @@ router.post("/", isLoggedIn, async (req, res, next) => {
       UserId: req.user.id,
     });
 
+    // content에 이미지가 있는 경우 이미지 추가해서 응답
+    if (req.body.image) {
+      if (Array.isArray(req.body.image)) {
+        // 이미지가 다수이면 배열 [a.png, b.png]
+        const images = await Promise.all(
+          req.body.image.map((image) => {
+            Image.create({ src: image });
+          }) //db엔 주소만 갖고 있음
+        );
+
+        await post.addImages(images);
+      } else {
+        // 이미지가 하나면 image: c.png
+        const image = await Image.create({ src: req.body.image });
+        await post.addImages(image);
+      }
+    }
     const fullPost = await Post.findOne({
       where: { id: post.id },
       include: [
@@ -54,22 +87,6 @@ router.post("/", isLoggedIn, async (req, res, next) => {
     console.error(err);
     next(err);
   }
-});
-
-const upload = multer({
-  // 어디에 저장할 것이니?
-  storage: multer.diskStorage({
-    destination(req, file, done) {
-      done(null, "uploads");
-    },
-    filename(req, file, done) {
-      // dfd.png
-      const ext = path.extname(file.originalname); // 확장자 추출(.png)
-      const basename = path.basename(file.originalname, ext); // dfd
-      done(null, basename + new Date().getTime() + ext); // dfd1213.png
-    },
-  }),
-  limits: { fieldSize: 20 * 1024 * 1024 }, // 20MB 이미지 제한
 });
 
 // image router
