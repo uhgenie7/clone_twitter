@@ -1,5 +1,5 @@
 const express = require("express");
-const { Post, Image, Comment, User } = require("../models");
+const { Post, Image, Comment, User, Hashtag } = require("../models");
 const { isLoggedIn } = require("./middlewares");
 const multer = require("multer");
 const path = require("path");
@@ -32,12 +32,22 @@ const upload = multer({
 
 router.post("/", isLoggedIn, upload.none(), async (req, res, next) => {
   // POST /post
-  // res.json([{ id: 1, content: "hello" }]);
   try {
+    const hashtags = req.body.content.match(/#[^\s#]+/g);
     const post = await Post.create({
       content: req.body.content,
       UserId: req.user.id,
     });
+
+    if (hashtags) {
+      const result = await Promise.all(
+        hashtags.map((tag) =>
+          Hashtag.findOrCreate({ where: { name: tag.slice(1).toLowerCase() } })
+        )
+      );
+      // [[#노드, true], [#리액트 true]]
+      await post.addHashtags(result.map((v) => v[0]));
+    }
 
     // content에 이미지가 있는 경우 이미지 추가해서 응답
     if (req.body.image) {
