@@ -108,6 +108,7 @@ function* addComment(action) {
       // data: action.data,
     });
   } catch (err) {
+    console.error(err);
     yield put({
       type: ADD_COMMENT_FAILURE,
       error: err.response.data,
