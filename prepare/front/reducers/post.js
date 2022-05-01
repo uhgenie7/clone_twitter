@@ -25,6 +25,7 @@ export const initialState = {
   likePostLoading: false,
   likePostDone: false,
   likePostError: null,
+
   unlikePostLoading: false,
   unlikePostDone: false,
   unlikePostError: null,
