@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
-import AppLayout from "../components/AppLayout";
 import { useSelector, useDispatch } from "react-redux";
+
+import AppLayout from "../components/AppLayout";
 import PostForm from "../components/PostForm";
 import PostCard from "../components/PostCard";
 import { LOAD_POSTS_REQUEST } from "../reducers/post";
@@ -9,7 +10,7 @@ import { LOAD_MY_INFO_REQUEST } from "../reducers/user";
 const Home = () => {
   const dispatch = useDispatch();
   const { me } = useSelector((state) => state.user);
-  const { mainPosts, hasMorePost, loadPostsLoading, retweetError } =
+  const { mainPosts, hasMorePosts, loadPostsLoading, retweetError } =
     useSelector((state) => state.post);
 
   useEffect(() => {
@@ -22,7 +23,6 @@ const Home = () => {
     dispatch({
       type: LOAD_MY_INFO_REQUEST,
     });
-
     dispatch({
       type: LOAD_POSTS_REQUEST,
     });
@@ -31,13 +31,14 @@ const Home = () => {
   useEffect(() => {
     function onScroll() {
       if (
-        window.scrollY + document.documentElement.clientHeight >
+        window.pageYOffset + document.documentElement.clientHeight >
         document.documentElement.scrollHeight - 300
       ) {
-        if (hasMorePost && !loadPostsLoading) {
+        if (hasMorePosts && !loadPostsLoading) {
+          const lastId = mainPosts[mainPosts.length - 1]?.id;
           dispatch({
             type: LOAD_POSTS_REQUEST,
-            data: mainPosts[mainPosts.length - 1].id,
+            lastId,
           });
         }
       }
@@ -46,12 +47,12 @@ const Home = () => {
     return () => {
       window.removeEventListener("scroll", onScroll);
     };
-  }, [mainPosts, hasMorePost, loadPostsLoading]);
+  }, [hasMorePosts, loadPostsLoading, mainPosts]);
 
   return (
     <AppLayout>
       {me && <PostForm />}
-      {mainPosts.map((post, index) => (
+      {mainPosts.map((post) => (
         <PostCard key={post.id} post={post} />
       ))}
     </AppLayout>
