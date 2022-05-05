@@ -8,6 +8,7 @@ const morgan = require("morgan");
 const postRouter = require("./routes/post");
 const postsRouter = require("./routes/posts");
 const userRouter = require("./routes/user");
+const hashtagRouter = require("./routes/hashtag");
 const db = require("./models");
 const app = express();
 const passportConfig = require("./passport");
@@ -53,6 +54,7 @@ app.use(passport.session());
 app.use("/post", postRouter);
 app.use("/posts", postsRouter);
 app.use("/user", userRouter);
+app.use("/hashtag", hashtagRouter);
 
 // app.user((err, req, res, next) => {
 //   // 직접 에러 처리 미들 웨어를 처리
