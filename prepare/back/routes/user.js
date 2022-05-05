@@ -286,7 +286,9 @@ router.get("/followers", isLoggedIn, async (req, res, next) => {
     if (!user) {
       res.status(403).send("없는 사람을 찾으려고 하시네요?");
     }
-    const followers = await user.getFollowers();
+    const followers = await user.getFollowers({
+      limit: 3,
+    });
     res.status(200).json(followers);
   } catch (error) {
     console.error(error);
@@ -301,7 +303,9 @@ router.get("/followings", isLoggedIn, async (req, res, next) => {
     if (!user) {
       res.status(403).send("없는 사람을 찾으려고 하시네요?");
     }
-    const followings = await user.getFollowings();
+    const followings = await user.getFollowings({
+      limit: 3,
+    });
     res.status(200).json(followings);
   } catch (error) {
     console.error(error);
