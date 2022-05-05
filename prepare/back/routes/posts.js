@@ -53,7 +53,6 @@ router.get("/", async (req, res, next) => {
         },
       ],
     });
-    console.log(posts);
     res.status(200).json(posts);
   } catch (err) {
     console.error(err);
