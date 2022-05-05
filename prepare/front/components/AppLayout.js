@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { useCallback } from "react";
 import Link from "next/link";
 import { Menu, Input, Row, Col } from "antd";
 import LoginForm from "./LoginForm";
 import UserProfile from "./UserProfile";
 import { useSelector } from "react-redux";
 import { createGlobalStyle } from "styled-components";
+import useInput from "../hooks/useInput";
+import Router from "next/router";
+import styled from "styled-components";
 
 const Global = createGlobalStyle`
   .ant-row {
@@ -24,6 +27,11 @@ const Global = createGlobalStyle`
 const AppLayout = ({ children }) => {
   // const [isLoggedIn, setIsLoggedIn] = useState(false)
   const { me } = useSelector((state) => state.user);
+  const [searchInput, onChangeSearchInput] = useInput("");
+
+  const onSearch = useCallback(() => {
+    Router.push(`/hashtag/${searchInput}`);
+  }, [searchInput]);
 
   return (
     <div>
@@ -40,7 +48,12 @@ const AppLayout = ({ children }) => {
           </Link>
         </Menu.Item>
         <Menu.Item>
-          <Input.Search enterButton style={{ verticalAlign: "middle" }} />
+          <SearchInput
+            enterButton
+            value={searchInput}
+            onChange={onChangeSearchInput}
+            onSearch={onSearch}
+          />
         </Menu.Item>
         <Menu.Item>
           <Link href="/signup">
@@ -70,3 +83,7 @@ const AppLayout = ({ children }) => {
 };
 
 export default AppLayout;
+
+const SearchInput = styled(Input.Search)`
+  vertical-align: middle;
+`;
