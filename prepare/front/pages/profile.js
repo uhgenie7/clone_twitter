@@ -16,20 +16,20 @@ import { LOAD_MY_INFO_REQUEST } from "../reducers/user";
 import useSWR from "swr";
 
 // fetcher를 다른 것으로 바꾸면 graphql도 쓸 수 있음
-const fetcher = (url) => {
-  axios.get(url, { withCredentials: true }).then(result)=>result.data;
-};
+const fetcher = (url) =>
+  axios.get(url, { withCredentials: true }).then((result) => result.data);
+
 const Profile = () => {
   const dispatch = useDispatch();
 
   const { me } = useSelector((state) => state.user);
 
-  const { data:followersData, error:followerError } = useSWR(
+  const { data: followersData, error: followerError } = useSWR(
     `http://localhost:3065/user/followers`,
     fetcher
   );
 
-  const { data:followingsData, error:followeringError } = useSWR(
+  const { data: followingsData, error: followingError } = useSWR(
     `http://localhost:3065/user/followings`,
     fetcher
   );
@@ -40,12 +40,10 @@ const Profile = () => {
     }
   }, [me && me.id]);
 
-  
   if (followerError || followingError) {
     console.error(followerError || followingError);
-    return '팔로잉/팔로워 로딩 중 에러가 발생했습니다.';
+    return "팔로잉/팔로워 로딩 중 에러가 발생했습니다.";
   }
-
 
   if (!me) {
     return null;
@@ -57,8 +55,8 @@ const Profile = () => {
       </Head>
       <AppLayout>
         <NicknameEditForm />
-        <FollowList header="팔로잉" data={me.Followings} />
-        <FollowList header="팔로워" data={me.Followers} />
+        <FollowList header="팔로잉" data={followingsData} />
+        <FollowList header="팔로워" data={followersData} />
       </AppLayout>
     </>
   );
