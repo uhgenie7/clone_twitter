@@ -34,17 +34,18 @@ const Profile = () => {
     fetcher
   );
 
-  if (followerError || followingError) {
-    console.error(followerError || followingError);
-    return '팔로잉/팔로워 로딩 중 에러가 발생했습니다.';
-  }
-
-
   useEffect(() => {
     if (!(me && me.id)) {
       Router.push("/");
     }
   }, [me && me.id]);
+
+  
+  if (followerError || followingError) {
+    console.error(followerError || followingError);
+    return '팔로잉/팔로워 로딩 중 에러가 발생했습니다.';
+  }
+
 
   if (!me) {
     return null;
