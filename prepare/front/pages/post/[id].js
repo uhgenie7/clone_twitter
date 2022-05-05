@@ -49,6 +49,7 @@ const Post = () => {
 };
 
 // export async function getStaticPaths() {
+// const await = axios.get('/post...')
 //   return {
 //     paths: [
 //       { params: { id: '1' } },
