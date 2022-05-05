@@ -4,14 +4,9 @@ import { useSelector, useDispatch } from "react-redux";
 import Router from "next/router";
 import { END } from "redux-saga";
 import axios from "axios";
-
 import AppLayout from "../components/AppLayout";
 import NicknameEditForm from "../components/NicknameEditForm";
 import FollowList from "../components/FollowList";
-import {
-  LOAD_FOLLOWERS_REQUEST,
-  LOAD_FOLLOWINGS_REQUEST,
-} from "../reducers/user";
 import { LOAD_MY_INFO_REQUEST } from "../reducers/user";
 import useSWR from "swr";
 
