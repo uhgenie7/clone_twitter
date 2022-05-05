@@ -4,7 +4,7 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { UNFOLLOW_REQUEST, REMOVE_FOLLOWER_REQUEST } from "../reducers/user";
 
-const FollowList = ({ header, data, onClickMore }) => {
+const FollowList = ({ header, data, onClickMore, loading }) => {
   const dispatch = useDispatch();
 
   const onCancel = (id) => () => {

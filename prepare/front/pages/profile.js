@@ -1,27 +1,23 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Head from "next/head";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import Router from "next/router";
 import { END } from "redux-saga";
 import axios from "axios";
+import useSWR from "swr";
+
 import AppLayout from "../components/AppLayout";
 import NicknameEditForm from "../components/NicknameEditForm";
 import FollowList from "../components/FollowList";
 import { LOAD_MY_INFO_REQUEST } from "../reducers/user";
-import useSWR from "swr";
 import wrapper from "../store/configureStore";
 
-// fetcher를 다른 것으로 바꾸면 graphql도 쓸 수 있음
 const fetcher = (url) =>
   axios.get(url, { withCredentials: true }).then((result) => result.data);
 
 const Profile = () => {
-  const dispatch = useDispatch();
-
-  const { me } = useSelector((state) => state.user);
-  const { followersLimit, setFollowersLimit } = useState(3);
-  const { followingsLimit, setFollowingsLimit } = useState(3);
-
+  const [followingsLimit, setFollowingsLimit] = useState(3);
+  const [followersLimit, setFollowersLimit] = useState(3);
   const { data: followingsData, error: followingError } = useSWR(
     `http://localhost:3065/user/followings?limit=${followingsLimit}`,
     fetcher
@@ -30,6 +26,7 @@ const Profile = () => {
     `http://localhost:3065/user/followers?limit=${followersLimit}`,
     fetcher
   );
+  const { me } = useSelector((state) => state.user);
 
   useEffect(() => {
     if (!(me && me.id)) {
@@ -45,15 +42,14 @@ const Profile = () => {
     setFollowingsLimit((prev) => prev + 3);
   }, []);
 
-  if (!me) {
-    return "내 정보 로딩 중";
-  }
-
   if (followerError || followingError) {
     console.error(followerError || followingError);
     return "팔로잉/팔로워 로딩 중 에러가 발생했습니다.";
   }
 
+  if (!me) {
+    return "내 정보 로딩중...";
+  }
   return (
     <>
       <Head>
@@ -63,14 +59,14 @@ const Profile = () => {
         <NicknameEditForm />
         <FollowList
           header="팔로잉"
-          onClickMore={loadMoreFollowings}
           data={followingsData}
+          onClickMore={loadMoreFollowings}
           loading={!followingError && !followingsData}
         />
         <FollowList
           header="팔로워"
-          onClickMore={loadMoreFollowers}
           data={followersData}
+          onClickMore={loadMoreFollowers}
           loading={!followerError && !followersData}
         />
       </AppLayout>
@@ -80,17 +76,18 @@ const Profile = () => {
 
 export const getServerSideProps = wrapper.getServerSideProps(
   async (context) => {
+    console.log("getServerSideProps start");
+    console.log(context.req.headers);
     const cookie = context.req ? context.req.headers.cookie : "";
     axios.defaults.headers.Cookie = "";
-
     if (context.req && cookie) {
       axios.defaults.headers.Cookie = cookie;
     }
     context.store.dispatch({
       type: LOAD_MY_INFO_REQUEST,
     });
-
     context.store.dispatch(END);
+    console.log("getServerSideProps end");
     await context.store.sagaTask.toPromise();
   }
 );
