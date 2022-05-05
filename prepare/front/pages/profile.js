@@ -13,20 +13,32 @@ import {
   LOAD_FOLLOWINGS_REQUEST,
 } from "../reducers/user";
 import { LOAD_MY_INFO_REQUEST } from "../reducers/user";
+import useSWR from "swr";
 
+// fetcher를 다른 것으로 바꾸면 graphql도 쓸 수 있음
+const fetcher = (url) => {
+  axios.get(url, { withCredentials: true }).then(result)=>result.data;
+};
 const Profile = () => {
   const dispatch = useDispatch();
 
   const { me } = useSelector((state) => state.user);
 
-  useEffect(() => {
-    dispatch({
-      type: LOAD_FOLLOWERS_REQUEST,
-    });
-    dispatch({
-      type: LOAD_FOLLOWINGS_REQUEST,
-    });
-  }, []);
+  const { data:followersData, error:followerError } = useSWR(
+    `http://localhost:3065/user/followers`,
+    fetcher
+  );
+
+  const { data:followingsData, error:followeringError } = useSWR(
+    `http://localhost:3065/user/followings`,
+    fetcher
+  );
+
+  if (followerError || followingError) {
+    console.error(followerError || followingError);
+    return '팔로잉/팔로워 로딩 중 에러가 발생했습니다.';
+  }
+
 
   useEffect(() => {
     if (!(me && me.id)) {
