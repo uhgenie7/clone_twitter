@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import Head from "next/head";
 import { useSelector, useDispatch } from "react-redux";
 import Router from "next/router";
@@ -19,14 +19,15 @@ const Profile = () => {
   const dispatch = useDispatch();
 
   const { me } = useSelector((state) => state.user);
-
-  const { data: followersData, error: followerError } = useSWR(
-    `http://localhost:3065/user/followers`,
-    fetcher
-  );
+  const { followersLimit, setFollowersLimit } = useState(3);
+  const { followingsLimit, setFollowingsLimit } = useState(3);
 
   const { data: followingsData, error: followingError } = useSWR(
-    `http://localhost:3065/user/followings`,
+    `http://localhost:3065/user/followings?limit=${followingsLimit}`,
+    fetcher
+  );
+  const { data: followersData, error: followerError } = useSWR(
+    `http://localhost:3065/user/followers?limit=${followersLimit}`,
     fetcher
   );
 
@@ -35,6 +36,14 @@ const Profile = () => {
       Router.push("/");
     }
   }, [me && me.id]);
+
+  const loadMoreFollowers = useCallback(() => {
+    setFollowersLimit((prev) => prev + 3);
+  }, []);
+
+  const loadMoreFollowings = useCallback(() => {
+    setFollowingsLimit((prev) => prev + 3);
+  }, []);
 
   if (!me) {
     return "내 정보 로딩 중";
@@ -52,8 +61,18 @@ const Profile = () => {
       </Head>
       <AppLayout>
         <NicknameEditForm />
-        <FollowList header="팔로잉" data={followingsData} />
-        <FollowList header="팔로워" data={followersData} />
+        <FollowList
+          header="팔로잉"
+          onClickMore={loadMoreFollowings}
+          data={followingsData}
+          loading={!followingError && !followingsData}
+        />
+        <FollowList
+          header="팔로워"
+          onClickMore={loadMoreFollowers}
+          data={followersData}
+          loading={!followerError && !followersData}
+        />
       </AppLayout>
     </>
   );
