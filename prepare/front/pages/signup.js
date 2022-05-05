@@ -10,7 +10,7 @@ import { SIGN_UP_REQUEST } from "../reducers/user";
 import { END } from "redux-saga";
 import axios from "axios";
 import { LOAD_MY_INFO_REQUEST } from "../reducers/user";
-
+import wrapper from "../store/configureStore";
 const Signup = () => {
   const dispatch = useDispatch();
   const { signUpLoading, signUpDone, signUpError, me } = useSelector(

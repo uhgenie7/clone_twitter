@@ -9,6 +9,7 @@ import NicknameEditForm from "../components/NicknameEditForm";
 import FollowList from "../components/FollowList";
 import { LOAD_MY_INFO_REQUEST } from "../reducers/user";
 import useSWR from "swr";
+import wrapper from "../store/configureStore";
 
 // fetcher를 다른 것으로 바꾸면 graphql도 쓸 수 있음
 const fetcher = (url) =>
