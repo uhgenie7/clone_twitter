@@ -33,6 +33,9 @@ import {
   RETWEET_FAILURE,
   RETWEET_REQUEST,
   RETWEET_SUCCESS,
+  LOAD_POST_REQUEST,
+  LOAD_POST_SUCCESS,
+  LOAD_POST_FAILURE,
 } from "../reducers/post";
 import { ADD_POST_TO_ME, REMOVE_POST_OF_ME } from "../reducers/user";
 
