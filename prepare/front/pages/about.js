@@ -2,12 +2,10 @@ import React from "react";
 import { useSelector } from "react-redux";
 import Head from "next/head";
 import { END } from "redux-saga";
-
 import { Avatar, Card } from "antd";
 import AppLayout from "../components/AppLayout";
 import wrapper from "../store/configureStore";
 import { LOAD_USER_REQUEST } from "../reducers/user";
-import wrapper from "../store/configureStore";
 
 const Profile = () => {
   const { userInfo } = useSelector((state) => state.user);
